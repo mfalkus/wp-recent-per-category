@@ -46,6 +46,7 @@ class WP_Recent_Per_Category extends WP_Widget {
 		if ( ! $number )
 			$number = 5;
 		$show_date = isset( $instance['show_date'] ) ? $instance['show_date'] : false;
+		$cat_id = ( ! empty( $instance['cat_id'] ) ) ? absint( $instance['cat_id'] ) : 0;
 
 		/**
 		 * Filter the arguments for the Recent Posts widget.
@@ -60,7 +61,8 @@ class WP_Recent_Per_Category extends WP_Widget {
 			'posts_per_page'      => $number,
 			'no_found_rows'       => true,
 			'post_status'         => 'publish',
-			'ignore_sticky_posts' => true
+			'ignore_sticky_posts' => true,
+            'cat'                 => $cat_id
 		) ) );
 
 		if ($r->have_posts()) :
@@ -92,10 +94,10 @@ class WP_Recent_Per_Category extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$instance['title'] = sanitize_text_field( $new_instance['title'] );
-		$instance['number'] = (int) $new_instance['number'];
-		$instance['show_date'] = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
-        // Add category option here
+		$instance['title']      = sanitize_text_field( $new_instance['title'] );
+		$instance['number']     = (int) $new_instance['number'];
+		$instance['show_date']  = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
+		$instance['cat_id']     = (int) $new_instance['cat_id'];
 		return $instance;
 	}
 
@@ -105,6 +107,7 @@ class WP_Recent_Per_Category extends WP_Widget {
 	public function form( $instance ) {
 		$title     = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 		$number    = isset( $instance['number'] ) ? absint( $instance['number'] ) : 5;
+		$cat_id    = isset( $instance['cat_id'] ) ? absint( $instance['cat_id'] ) : 0;
 		$show_date = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : false;
 ?>
 		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
@@ -112,6 +115,14 @@ class WP_Recent_Per_Category extends WP_Widget {
 
 		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of posts to show:' ); ?></label>
 		<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo $number; ?>" size="3" /></p>
+
+		<p><label for="<?php echo $this->get_field_id( 'cat_id' ); ?>"><?php _e( 'Category:' ); ?></label>
+        <?php wp_dropdown_categories( array(
+            'hide_empty'   => 0,
+            'name'         => 'cat_id',
+            'id'           => 'cat_id',
+            'hierarchical' => true
+        ) ); ?></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
 		<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?' ); ?></label></p>
