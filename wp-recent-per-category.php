@@ -119,9 +119,10 @@ class WP_Recent_Per_Category extends WP_Widget {
         <p><label for="<?php echo $this->get_field_id( 'cat_id' ); ?>"><?php _e( 'Category:' ); ?></label>
         <?php wp_dropdown_categories( array(
             'hide_empty'   => 0,
-            'name'         => 'cat_id',
-            'id'           => 'cat_id',
-            'hierarchical' => true
+            'name'         => $this->get_field_name('cat_id'),
+            'id'           => $this->get_field_id('cat_id'),
+            'hierarchical' => true,
+            'selected'     => $cat_id
         ) ); ?></p>
 
         <p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
