@@ -1,4 +1,14 @@
 <?php
+/*
+Plugin Name: Recent Per Category
+Plugin URI: http://falkus.co
+Description: Heavily based on the built in Recent Posts plugin, but using specific categories
+Version: 1.0
+Author: Martin Falkus
+Author URI: http://falkus.co
+License: GPL2
+*/
+
 /**
  * Recent posts, based on a given category
  *
@@ -108,3 +118,12 @@ class WP_Recent_Per_Category extends WP_Widget {
 <?php
 	}
 }
+
+
+/**
+ * Register our widget, hooked on to widgets_init
+ */
+function recent_per_cat_widget_register() {
+    register_widget('WP_Recent_Per_Category');
+}
+add_action('widgets_init', 'recent_per_cat_widget_register');
